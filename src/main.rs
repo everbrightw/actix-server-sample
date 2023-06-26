@@ -2,10 +2,11 @@ mod api;
 mod model;
 mod repository;
 
-use api::task::{get_task, start_task, submit_task};
-
 use actix_web::{middleware::Logger, web, web::Data, App, HttpServer, Responder};
+use api::task::{get_task, start_task, submit_task};
+use dotenv::dotenv;
 use repository::ddb::DDBRepository;
+use std::env;
 
 // #[actix_web::main]
 // aync fn main() -> std::io::Result<()> {
@@ -32,8 +33,10 @@ async fn main() -> std::io::Result<()> {
     std::env::set_var("Rust_LOG", "debug");
     std::env::set_var("RUST_BACKTRACE", "1");
 
+    dotenv().ok();
+
     let config = aws_config::load_from_env().await;
-    println!("{:?}", config.region());
+    println!("{:?}\n", config.region());
 
     HttpServer::new(move || {
         print!("server created, thread spawned\n");

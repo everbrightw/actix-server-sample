@@ -46,7 +46,7 @@ fn item_to_task(item: &HashMap<String, AttributeValue>) -> Result<Task, DDBError
     let result_file = item_value("result_file", item)?;
 
     Ok(Task {
-        user_id: required_item_value("pK", item)?,
+        user_uuid: required_item_value("pK", item)?,
         task_uuid: required_item_value("sK", item)?,
         task_type: required_item_value("task_type", item)?,
         state,
@@ -66,7 +66,7 @@ impl DDBRepository {
             .client
             .put_item()
             .table_name(&self.table_name)
-            .item("pK", AttributeValue::S(String::from(task.user_id)))
+            .item("pK", AttributeValue::S(String::from(task.user_uuid)))
             .item("sK", AttributeValue::S(String::from(task.task_uuid)))
             .item("task_type", AttributeValue::S(String::from(task.task_type)))
             .item("state", AttributeValue::S(task.state.to_string()))
